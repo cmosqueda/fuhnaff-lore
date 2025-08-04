@@ -25,7 +25,7 @@ export default function CardFullView({ card, onBack, onPrev, onNext, isFirst, is
       <div className="flex-grow flex flex-col items-center p-6 gap-4">
         {card.image && <img src={card.image} alt={card.name} className="w-full max-w-md h-72 object-cover rounded" />}
         <div className="text-center max-w-2xl">
-          <p className="text-sm text-gray-300 mb-3">{card.description}</p>
+          <p className="text-sm text-gray-300 mb-3">{card.shortDescription}</p>
           <p className="text-xs text-gray-400 italic">Category: {card.category}</p>
         </div>
       </div>

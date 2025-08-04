@@ -15,7 +15,7 @@ export default function CardModal({ isOpen, card, onClose, onPrev, onNext, isFir
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-      <div className="bg-zinc-800 text-white p-5 mx-4 rounded-lg max-w-lg w-full relative shadow-xl">
+      <div className="bg-gradient-to-br from-zinc-800 to-zinc-900 text-white p-5 mx-4 rounded-lg max-w-lg w-full relative shadow-xl border-2 border-purple-700 scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-purple-800">
         <button
           onClick={onClose}
           className="absolute top-0 right-0 m-4 text-white bg-red-500 px-2 py-1 rounded cursor-pointer"
@@ -29,7 +29,7 @@ export default function CardModal({ isOpen, card, onClose, onPrev, onNext, isFir
           <div className="flex flex-col gap-2">
             <h2 className="text-2xl font-bold">{card.name}</h2>
             <p className="text-xs text-gray-400 italic">Category: {card.category}</p>
-            <p className="text-sm text-gray-300 ">{card.description}</p>
+            <p className="text-sm text-gray-300 ">{card.shortDescription}</p>
           </div>
         </div>
 

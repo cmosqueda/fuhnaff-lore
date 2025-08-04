@@ -5,7 +5,8 @@ export interface BaseLoreCard {
   name: string;
   category: LoreCardType;
   image?: string;
-  description: string;
+  shortDescription: string;
+  longDescription?: string;
 }
 
 // Character-specific
