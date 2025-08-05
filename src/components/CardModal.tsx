@@ -1,3 +1,6 @@
+import { X } from "lucide-react";
+import { ArrowBigRight } from "lucide-react";
+import { ArrowBigLeft } from "lucide-react";
 import type { LoreCardData } from "@/types/lore";
 
 type Props = {
@@ -18,9 +21,9 @@ export default function CardModal({ isOpen, card, onClose, onPrev, onNext, isFir
       <div className="bg-gradient-to-br from-zinc-800 to-zinc-900 text-white p-5 mx-4 rounded-lg max-w-lg w-full relative shadow-xl border-2 border-purple-700 scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-purple-800">
         <button
           onClick={onClose}
-          className="absolute top-0 right-0 m-4 text-white bg-red-500 px-2 py-1 rounded cursor-pointer"
+          className="absolute top-0 right-0 m-4 text-white bg-red-500 hover:bg-red-400 px-2 py-1 rounded cursor-pointer"
         >
-          Close
+          <X></X>
         </button>
 
         <div className="flex flex-col w-full h-[400px] overflow-y-scroll ">
@@ -35,11 +38,19 @@ export default function CardModal({ isOpen, card, onClose, onPrev, onNext, isFir
 
         {/* pagination buttons */}
         <div className="flex justify-between mt-5">
-          <button onClick={onPrev} disabled={isFirst} className="bg-purple-700 px-4 py-2 rounded disabled:opacity-40">
-            Previous
+          <button
+            onClick={onPrev}
+            disabled={isFirst}
+            className="bg-purple-700 hover:bg-purple-500 px-4 py-2 rounded disabled:opacity-40"
+          >
+            <ArrowBigLeft></ArrowBigLeft>
           </button>
-          <button onClick={onNext} disabled={isLast} className="bg-purple-700 px-4 py-2 rounded disabled:opacity-40">
-            Next
+          <button
+            onClick={onNext}
+            disabled={isLast}
+            className="bg-purple-700 hover:bg-purple-500 px-4 py-2 rounded disabled:opacity-40"
+          >
+            <ArrowBigRight></ArrowBigRight>
           </button>
         </div>
       </div>

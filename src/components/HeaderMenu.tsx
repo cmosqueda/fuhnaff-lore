@@ -16,10 +16,10 @@ export default function HeaderMenu({ selectedCategory, setSelectedCategory, opti
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="p-1 rounded-md font-bold text-white"
+            className="p-1 font-bold text-white hover:bg-purple-700"
           >
             {options.map((cat) => (
-              <option key={cat} value={cat} className="text-black">
+              <option key={cat} value={cat} className="text-black bg-white">
                 {cat[0].toUpperCase() + cat.slice(1)}
               </option>
             ))}
