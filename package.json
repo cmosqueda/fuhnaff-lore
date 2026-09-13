@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:vercel": "vercel dev",
+    "fetch:lore": "node scripts/fetch-lore.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -15,6 +17,7 @@
   "dependencies": {
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/vite": "^4.1.11",
+    "cheerio": "^1.2.0",
     "lucide-react": "^0.536.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -34,6 +37,7 @@
     "tailwind-scrollbar": "^4.0.2",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
+    "vercel": "^59.16.0",
     "vite": "^7.0.4"
   }
 }

@@ -6,7 +6,7 @@ export default function LoreCard({ name, image, shortDescription, category }: Lo
       {/* Image Section */}
       <div className="h-[55%] bg-zinc-700 flex items-center justify-center overflow-hidden">
         {image ? (
-          <img src={image} alt={name} className="w-full h-full object-cover" />
+          <img src={image} alt={name} className="w-full h-full object-contain" />
         ) : (
           <span className="text-gray-400 text-sm italic">No image</span>
         )}
