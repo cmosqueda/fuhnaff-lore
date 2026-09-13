@@ -6,6 +6,13 @@
 import * as manifest from "../lib/lore/manifest.mjs";
 import { fetchLoreData } from "../lib/lore/wiki.mjs";
 
+// Discovering across 10 games' worth of categories means fetching several
+// hundred wiki pages on a cache miss (~10s locally) — comfortably past
+// Vercel's 10s default, so this asks for more room. stale-while-revalidate
+// below means visitors essentially never wait on this: they get the cached
+// response while a slow cache-refresh happens in the background.
+export const config = { maxDuration: 60 };
+
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.status(405).json({ error: "Method not allowed" });

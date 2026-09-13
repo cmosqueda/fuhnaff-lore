@@ -100,8 +100,32 @@ function App() {
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
   const isModalOpen = selectedCardIndex !== null;
 
-  return (
-    <div className="w-full h-full bg-zinc-900">
+  const [crtEnabled, setCrtEnabled] = useState<boolean>(() => localStorage.getItem("crtEnabled") === "true");
+  useEffect(() => {
+    localStorage.setItem("crtEnabled", String(crtEnabled));
+  }, [crtEnabled]);
+
+  // Rare, brief "signal interference" — like a monitor hiccupping, not a
+  // constant tic. Skipped entirely for reduced-motion users rather than
+  // just relying on the CSS override, so no timers churn for nothing.
+  const [ambientGlitch, setAmbientGlitch] = useState(false);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let timeoutId: number;
+    function scheduleNext() {
+      const delay = 25000 + Math.random() * 35000; // 25-60s
+      timeoutId = window.setTimeout(() => {
+        setAmbientGlitch(true);
+        window.setTimeout(() => setAmbientGlitch(false), 450);
+        scheduleNext();
+      }, delay);
+    }
+    scheduleNext();
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  const browsingContent = (
+    <>
       {/* header menu */}
       <HeaderMenu
         selectedCategory={selectedCategory}
@@ -112,21 +136,12 @@ function App() {
         selectedGame={selectedGame}
         setSelectedGame={setSelectedGame}
         gameOptions={gameOptions}
+        crtEnabled={crtEnabled}
+        setCrtEnabled={setCrtEnabled}
       />
 
       {/* card grid */}
       <CardGrid cards={paginatedCards} onCardClick={(index) => setSelectedCardIndex(startIndex + index)} />
-
-      {isModalOpen && selectedCardIndex !== null && (
-        <CardFullView
-          card={filteredCards[selectedCardIndex]}
-          onClose={() => setSelectedCardIndex(null)}
-          onPrev={() => setSelectedCardIndex((i) => (i !== null ? i - 1 : i))}
-          onNext={() => setSelectedCardIndex((i) => (i !== null ? i + 1 : i))}
-          isFirst={selectedCardIndex === 0}
-          isLast={selectedCardIndex === filteredCards.length - 1}
-        />
-      )}
 
       {/* pagination */}
       <Pagination
@@ -138,6 +153,44 @@ function App() {
 
       {/* footer */}
       <Footer />
+    </>
+  );
+
+  // The full-screen card view intentionally breaks out of the CRT bezel —
+  // it's already its own fixed, viewport-covering focus mode, and framing
+  // it too would mean re-deriving the bezel's exact screen rect just to
+  // constrain its positioning. Still gets the scanline/vignette/flicker
+  // treatment via its own crtEnabled prop, just not the physical bezel.
+  const cardFullView = isModalOpen && selectedCardIndex !== null && (
+    <CardFullView
+      card={filteredCards[selectedCardIndex]}
+      onClose={() => setSelectedCardIndex(null)}
+      onPrev={() => setSelectedCardIndex((i) => (i !== null ? i - 1 : i))}
+      onNext={() => setSelectedCardIndex((i) => (i !== null ? i + 1 : i))}
+      isFirst={selectedCardIndex === 0}
+      isLast={selectedCardIndex === filteredCards.length - 1}
+      crtEnabled={crtEnabled}
+    />
+  );
+
+  if (crtEnabled) {
+    return (
+      <div className="crt-bezel-wrap">
+        <div className={`crt-bezel ${ambientGlitch ? "ambient-glitching" : ""}`}>
+          <div className="crt-screen crt-mode scanlines">
+            <div className="crt-screen-scroll">{browsingContent}</div>
+            <div className="crt-screen-fx" aria-hidden="true" />
+          </div>
+        </div>
+        {cardFullView}
+      </div>
+    );
+  }
+
+  return (
+    <div className={`relative isolate w-full min-h-screen bg-void scanlines ${ambientGlitch ? "ambient-glitching" : ""}`}>
+      {browsingContent}
+      {cardFullView}
     </div>
   );
 }

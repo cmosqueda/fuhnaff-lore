@@ -2,21 +2,25 @@ import type { LoreCardData } from "@/types/lore";
 
 export default function LoreCard({ name, image, shortDescription, category }: LoreCardData) {
   return (
-    <div className="w-[150px] h-[220px] sm:w-[220px] sm:h-[330px] bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-xl overflow-hidden shadow-xl border-4 border-purple-700 flex flex-col">
+    <div className="glitch-hover w-[150px] h-[230px] sm:w-[220px] sm:h-[340px] bg-panel rounded-sm overflow-hidden border border-hairline hover:border-marquee-dim transition-colors flex flex-col">
       {/* Image Section */}
-      <div className="h-[55%] bg-zinc-700 flex items-center justify-center overflow-hidden">
+      <div className="glitch-target relative viewfinder h-[55%] bg-panel-raised flex items-center justify-center overflow-hidden shrink-0">
         {image ? (
-          <img src={image} alt={name} className="w-full h-full object-contain" />
+          <img src={image} alt={name} className="w-full h-full object-contain p-2" />
         ) : (
-          <span className="text-gray-400 text-sm italic">No image</span>
+          <span className="font-mono text-muted text-[10px] uppercase tracking-wide">no signal</span>
         )}
       </div>
 
       {/* Info Section */}
-      <div className="flex flex-col flex-grow px-3 py-2 justify-between">
-        <h2 className="text-sm sm:text-lg font-bold text-white leading-tight truncate">{name}</h2>
-        <p className="text-xs italic text-purple-300 mb-2">{category.toUpperCase()}</p>
-        <p className="text-xs sm:text-sm text-gray-300 line-clamp-3">{shortDescription}</p>
+      <div className="flex flex-col flex-grow px-3 py-2.5 justify-between min-h-0">
+        <div>
+          <p className="font-mono text-[9px] text-marquee tracking-widest uppercase">{category}</p>
+          <h2 className="glitch-text-target font-display text-lg sm:text-xl leading-tight text-parchment truncate mt-0.5">
+            {name}
+          </h2>
+        </div>
+        <p className="font-sans text-xs sm:text-sm text-muted line-clamp-3 mt-1">{shortDescription}</p>
       </div>
     </div>
   );
