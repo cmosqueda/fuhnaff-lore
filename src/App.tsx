@@ -124,8 +124,12 @@ function App() {
     return () => window.clearTimeout(timeoutId);
   }, []);
 
-  const browsingContent = (
-    <>
+  return (
+    <div
+      className={`relative isolate w-full min-h-screen bg-void scanlines ${crtEnabled ? "crt-mode" : ""} ${
+        ambientGlitch ? "ambient-glitching" : ""
+      }`}
+    >
       {/* header menu */}
       <HeaderMenu
         selectedCategory={selectedCategory}
@@ -143,6 +147,18 @@ function App() {
       {/* card grid */}
       <CardGrid cards={paginatedCards} onCardClick={(index) => setSelectedCardIndex(startIndex + index)} />
 
+      {isModalOpen && selectedCardIndex !== null && (
+        <CardFullView
+          card={filteredCards[selectedCardIndex]}
+          onClose={() => setSelectedCardIndex(null)}
+          onPrev={() => setSelectedCardIndex((i) => (i !== null ? i - 1 : i))}
+          onNext={() => setSelectedCardIndex((i) => (i !== null ? i + 1 : i))}
+          isFirst={selectedCardIndex === 0}
+          isLast={selectedCardIndex === filteredCards.length - 1}
+          crtEnabled={crtEnabled}
+        />
+      )}
+
       {/* pagination */}
       <Pagination
         currentPage={currentPage}
@@ -153,44 +169,6 @@ function App() {
 
       {/* footer */}
       <Footer />
-    </>
-  );
-
-  // The full-screen card view intentionally breaks out of the CRT bezel —
-  // it's already its own fixed, viewport-covering focus mode, and framing
-  // it too would mean re-deriving the bezel's exact screen rect just to
-  // constrain its positioning. Still gets the scanline/vignette/flicker
-  // treatment via its own crtEnabled prop, just not the physical bezel.
-  const cardFullView = isModalOpen && selectedCardIndex !== null && (
-    <CardFullView
-      card={filteredCards[selectedCardIndex]}
-      onClose={() => setSelectedCardIndex(null)}
-      onPrev={() => setSelectedCardIndex((i) => (i !== null ? i - 1 : i))}
-      onNext={() => setSelectedCardIndex((i) => (i !== null ? i + 1 : i))}
-      isFirst={selectedCardIndex === 0}
-      isLast={selectedCardIndex === filteredCards.length - 1}
-      crtEnabled={crtEnabled}
-    />
-  );
-
-  if (crtEnabled) {
-    return (
-      <div className="crt-bezel-wrap">
-        <div className={`crt-bezel ${ambientGlitch ? "ambient-glitching" : ""}`}>
-          <div className="crt-screen crt-mode scanlines">
-            <div className="crt-screen-scroll">{browsingContent}</div>
-            <div className="crt-screen-fx" aria-hidden="true" />
-          </div>
-        </div>
-        {cardFullView}
-      </div>
-    );
-  }
-
-  return (
-    <div className={`relative isolate w-full min-h-screen bg-void scanlines ${ambientGlitch ? "ambient-glitching" : ""}`}>
-      {browsingContent}
-      {cardFullView}
     </div>
   );
 }

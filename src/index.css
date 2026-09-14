@@ -270,91 +270,31 @@
     mix-blend-mode: overlay;
   }
 
-  /* "CRT mode" toggle — a stronger monitor effect layered on top of the
-     always-on subtle scanlines: heavier scanlines, an edge vignette (like
-     a curved tube), and a barely-there brightness flicker. Toggled from
-     the header, next to the clock. */
+  /* "CRT mode" toggle — a shader-like overlay across the full page, not a
+     framed TV device: a fine crosshatch grid (aperture-grille/shadow-mask
+     texture, not just horizontal lines), a strong lens-style vignette
+     crushing the corners toward black, and a barely-there flicker. The
+     overlay is `fixed` so it stays put and edge-to-edge regardless of
+     scroll position or content height. Toggled from the header. */
   .crt-mode {
-    --scanline-opacity: 0.35;
+    --scanline-opacity: 0.4;
     animation: var(--animate-crt-flicker);
   }
   .crt-mode::after {
     content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
-  }
-
-  /* The full CRT "monitor" treatment: a physical bezel framing a curved,
-     inset screen — everything scrolls inside it. Only mounted when CRT
-     mode is on (see App.tsx); the full-card view still breaks out to a
-     plain fixed viewport overlay rather than being constrained to this
-     rect (see the comment in App.tsx for why). */
-  .crt-bezel-wrap {
     position: fixed;
     inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    background: radial-gradient(ellipse at center, #1c1712 0%, #07050400 100%), var(--color-void);
-  }
-  @media (min-width: 640px) {
-    .crt-bezel-wrap {
-      padding: 22px;
-    }
-  }
-  @media (min-width: 1024px) {
-    .crt-bezel-wrap {
-      padding: 40px;
-    }
-  }
-
-  .crt-bezel {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 34px;
-    padding: 14px;
-    background: linear-gradient(155deg, #322a22 0%, #14100c 55%, #241d16 100%);
-    box-shadow:
-      0 30px 70px rgba(0, 0, 0, 0.65),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.05),
-      inset 0 2px 4px rgba(255, 255, 255, 0.06);
-  }
-
-  .crt-screen {
-    position: relative;
-    isolation: isolate;
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-    overflow: hidden;
-    background: var(--color-void);
-    /* The very mild tilt + scale is what reads as a "stretched", slightly
-       convex tube surface rather than a flat rectangle — subtle enough
-       that it never gets in the way of reading or clicking anything. */
-    transform: perspective(1200px) rotateX(0.6deg) scale(1.006);
-    box-shadow:
-      inset 0 0 50px 14px rgba(0, 0, 0, 0.85),
-      inset 0 0 0 2px rgba(0, 0, 0, 0.9);
-  }
-
-  .crt-screen-scroll {
-    position: absolute;
-    inset: 0;
-    overflow-y: auto;
-  }
-
-  .crt-screen-fx {
-    position: absolute;
-    inset: 0;
+    z-index: 40;
     pointer-events: none;
-    border-radius: inherit;
     background:
-      radial-gradient(ellipse at 28% 18%, rgba(255, 255, 255, 0.07), transparent 40%),
-      radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+      repeating-linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.3) 0px,
+        rgba(0, 0, 0, 0.3) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.85) 100%);
   }
 
   /* Camera-viewfinder corner brackets, used to frame images. Same note as
